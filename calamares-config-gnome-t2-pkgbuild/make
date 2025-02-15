@@ -1,0 +1,5 @@
+if [ "ls calamares-config-gnome-3.3.9-2-any.pkg.tar.zst*" = "calamares-config-gnome-3.3.9-2-any.pkg.tar.zst || calamares-config-gnome-3.3.9-2-any.pkg.tar.zst.sig" ] ; then
+   makepkg --sign
+else
+   makepkg -f --sign
+fi
