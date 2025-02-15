@@ -2,7 +2,7 @@
 
 # Function to safely remove directories
 remove_dirs() {
-    local dirs=("calamares-config-gnome" "src" "pkg")
+    local dirs=("calamares-config-gnome-t2" "src" "pkg")
     for dir in "${dirs[@]}"; do
         if [ -d "$dir" ]; then
             echo "Removing directory: $dir"
