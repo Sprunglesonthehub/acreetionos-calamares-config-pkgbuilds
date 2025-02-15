@@ -1,8 +1,56 @@
-rm -rf calamares-config-gnome/ src/ pkg/
+#!/bin/bash
 
-echo "Do you want to remove packages?"yn
-if [ $yn = "y""Y""Yes""YES" ] ; then
-  rm -rf *.pkg.tar.zst*
-else
-  echo "All done!"
-fi
+# Function to safely remove directories
+remove_dirs() {
+    local dirs=("calamares-config-gnome" "src" "pkg")
+    for dir in "${dirs[@]}"; do
+        if [ -d "$dir" ]; then
+            echo "Removing directory: $dir"
+            rm -rf "$dir"
+        else
+            echo "Directory not found: $dir"
+        fi
+    done
+}
+
+# Function to handle package cleanup
+cleanup_packages() {
+    local pkgs=(*.pkg.tar.zst*)
+    
+    if [ ${#pkgs[@]} -eq 0 ] || [ ! -e "${pkgs[0]}" ]; then
+        echo "No package files found."
+        return
+    }
+    
+    echo "Found the following package files:"
+    printf '%s\n' "${pkgs[@]}"
+    
+    while true; do
+        read -rp "Do you want to remove these packages? (y/n): " yn
+        case $yn in
+            [Yy]*)
+                echo "Removing package files..."
+                rm -f *.pkg.tar.zst*
+                break
+                ;;
+            [Nn]*)
+                echo "Keeping package files."
+                break
+                ;;
+            *)
+                echo "Please answer 'y' or 'n'."
+                ;;
+        esac
+    done
+}
+
+# Main script
+echo "=== Starting Cleanup Process ==="
+
+# Remove directories
+remove_dirs
+
+# Handle package cleanup
+cleanup_packages
+
+echo "=== Cleanup Complete ==="
