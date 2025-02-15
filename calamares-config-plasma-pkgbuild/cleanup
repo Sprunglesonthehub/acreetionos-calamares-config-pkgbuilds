@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Function to safely remove directories
+remove_dirs() {
+    local dirs=("calamares-config-plasma" "src" "pkg")
+    for dir in "${dirs[@]}"; do
+        if [ -d "$dir" ]; then
+            echo "Removing directory: $dir"
+            rm -rf "$dir"
+        else
+            echo "Directory not found: $dir"
+        fi
+    done
+}
+
+# Function to handle package cleanup
+cleanup_packages() {
+    # Check if any package files exist
+    if ls *.pkg.tar.zst* >/dev/null 2>&1; then
+        echo "Found package files:"
+        ls *.pkg.tar.zst*
+        
+        while true; do
+            read -rp "Do you want to remove these packages? (y/n): " yn
+            case $yn in
+                [Yy]*)
+                    echo "Removing package files..."
+                    rm -f *.pkg.tar.zst*
+                    break
+                    ;;
+                [Nn]*)
+                    echo "Keeping package files."
+                    break
+                    ;;
+                *)
+                    echo "Please answer 'y' or 'n'."
+                    ;;
+            esac
+        done
+    else
+        echo "No package files found."
+    fi
+}
+
+# Main script
+echo "=== Starting Cleanup Process ==="
+
+# Remove directories
+remove_dirs
+
+# Handle package cleanup
+cleanup_packages
+
+echo "=== Cleanup Complete ==="
