@@ -1,0 +1,8 @@
+rm -rf calamares-config-gnome/ src/ pkg/
+
+echo "Do you want to remove packages?"yn
+if [ $yn = "y""Y""Yes""YES" ] ; then
+  rm -rf *.pkg.tar.zst*
+else
+  echo "All done!"
+fi
