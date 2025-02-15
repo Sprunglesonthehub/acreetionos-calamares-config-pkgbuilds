@@ -15,33 +15,31 @@ remove_dirs() {
 
 # Function to handle package cleanup
 cleanup_packages() {
-    local pkgs=(*.pkg.tar.zst*)
-    
-    if [ ${#pkgs[@]} -eq 0 ] || [ ! -e "${pkgs[0]}" ]; then
+    # Check if any package files exist
+    if ls *.pkg.tar.zst* >/dev/null 2>&1; then
+        echo "Found package files:"
+        ls *.pkg.tar.zst*
+        
+        while true; do
+            read -rp "Do you want to remove these packages? (y/n): " yn
+            case $yn in
+                [Yy]*)
+                    echo "Removing package files..."
+                    rm -f *.pkg.tar.zst*
+                    break
+                    ;;
+                [Nn]*)
+                    echo "Keeping package files."
+                    break
+                    ;;
+                *)
+                    echo "Please answer 'y' or 'n'."
+                    ;;
+            esac
+        done
+    else
         echo "No package files found."
-        return
-    }
-    
-    echo "Found the following package files:"
-    printf '%s\n' "${pkgs[@]}"
-    
-    while true; do
-        read -rp "Do you want to remove these packages? (y/n): " yn
-        case $yn in
-            [Yy]*)
-                echo "Removing package files..."
-                rm -f *.pkg.tar.zst*
-                break
-                ;;
-            [Nn]*)
-                echo "Keeping package files."
-                break
-                ;;
-            *)
-                echo "Please answer 'y' or 'n'."
-                ;;
-        esac
-    done
+    fi
 }
 
 # Main script
